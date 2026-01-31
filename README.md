@@ -43,6 +43,6 @@
 
 This tool is powerful. The Active Defense feature will terminate processes. Ensure you have added your critical work applications to the PROCESS_WHITELIST to avoid data loss. The author is not responsible for any system instability or data loss.
 
-##📄 License
+## 📄 License
 
 Distributed under the MIT License. See LICENSE for more information.
