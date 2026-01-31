@@ -10,6 +10,9 @@ CPU_THRESHOLD = 80.0  # CPU usage percentage above which an alert is sent
 INTERVAL = 2
 LOG_FILE = "system_alert.log"
 MAX_CONSECUTIVE = 3
+
+# Processes in this list will NEVER be terminated by the script.
+# Add any critical software you use.
 PROCESS_WHITELIST = ["explorer.exe", "cpumonitor.py", "kernel_task.exe", "System Idle Process", "System", "python.exe", "taskhostw.exe", "services.exe", "wininit.exe"]
 
 def analyze_system():
@@ -35,18 +38,31 @@ def log_alert(value):
     
     # Active defense trigger if needed
     active_defense(heavy_processes)
-
+    
 def get_heavy_processes():
     """Returns a list of the top 3 processes consuming the most CPU."""
     processes = []
+    current_pid = psutil.Process().pid  
+    
     for proc in psutil.process_iter(['pid', 'name', 'cpu_percent']):
         try:
             info = proc.info
-            # Filter out whitelisted processes
-            if info['name'].lower() not in [n.lower() for n in PROCESS_WHITELIST]:
-                processes.append(info)
+            
+            
+            if info['pid'] == current_pid:
+                continue
+                
+            if info['name'].lower() in [n.lower() for n in PROCESS_WHITELIST]:
+                continue
+
+            processes.append(info)
+            
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             continue    
+
+   
+    processes.sort(key=lambda x: x['cpu_percent'], reverse=True)
+    return processes[:3]
 
     # Sort processes by CPU usage in descending order
     processes.sort(key=lambda x: x['cpu_percent'], reverse=True)
@@ -128,4 +144,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
