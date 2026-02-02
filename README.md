@@ -14,7 +14,7 @@
 1. **Clone the repository**:
    ```bash
    git clone [https://github.com/leumascripts/cpu-shield-py.git](https://github.com/leumascripts/cpu-shield-py.git)
-   cd cpu-shield-py
+   cd cpu-shield.py
 
    Install dependencies: pip install -r requirements.txt
 
